@@ -18,15 +18,6 @@ const Index: NextPage = () => {
   const [mainColor, setMainColor] = useState<string | null>(null);
   const [plusColor, setPlusColor] = useState<string | null>(null);
 
-  const dropperHandler = async (e: any) => {
-    if (!image) {
-      alert("이미지를 추가해 주세요.");
-      return;
-    }
-
-    colorInputRef.current?.click();
-  };
-
   const fileHandler = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -156,12 +147,6 @@ const Index: NextPage = () => {
           ) : (
             <label htmlFor="colorPlusInput" className={styles.color_label}>
               + 비교 색 추가
-              {/* <button
-                className={styles.button}
-                onClick={() => colorPlusInputRef.current?.click()}
-              >
-                + 비교 색 추가
-              </button> */}
             </label>
           )}
           <input
@@ -283,9 +268,9 @@ const Index: NextPage = () => {
             />
           </div>
         ) : (
-          <button className={styles.floating_button} onClick={dropperHandler}>
+          <label htmlFor="colorInput" className={styles.floating_button}>
             <img src="/eyedropper.svg" alt="eye dropper" width={30} />
-          </button>
+          </label>
         )}
         <input
           type="color"
@@ -293,6 +278,7 @@ const Index: NextPage = () => {
           className={styles.color_input}
           ref={colorInputRef}
           id="colorInput"
+          name="colorInput"
         />
       </div>
     </div>
