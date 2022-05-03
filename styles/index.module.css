@@ -3,7 +3,7 @@
   width: 100%;
   max-width: 640px;
   min-width: 300px;
-  padding: 0 16px 60px;
+  padding: 0 16px 80px;
   margin: 0 auto;
 }
 
@@ -20,7 +20,8 @@
   padding: 16px 0;
 }
 
-.button {
+.button,
+.color_label {
   padding: 6px 16px;
   font-size: 14px;
   line-height: 1.75;
@@ -31,7 +32,8 @@
   border-radius: 4px;
 }
 
-.button:hover {
+.button:hover,
+.color_label:hover {
   background-color: #1976d20a;
 }
 

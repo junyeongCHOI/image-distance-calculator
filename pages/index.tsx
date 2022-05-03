@@ -154,19 +154,23 @@ const Index: NextPage = () => {
               />
             </div>
           ) : (
-            <button
-              className={styles.button}
-              onClick={() => colorPlusInputRef.current?.click()}
-            >
+            <label htmlFor="colorPlusInput" className={styles.color_label}>
               + 비교 색 추가
-            </button>
+              {/* <button
+                className={styles.button}
+                onClick={() => colorPlusInputRef.current?.click()}
+              >
+                + 비교 색 추가
+              </button> */}
+            </label>
           )}
           <input
             type="color"
             style={{ top: -12, right: 0 }}
             className={styles.color_input}
             ref={colorPlusInputRef}
-            id="colorInput"
+            id="colorPlusInput"
+            name="colorPlusInput"
           />
         </div>
       </div>
