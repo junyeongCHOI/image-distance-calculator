@@ -52,17 +52,29 @@
   color: #1976d2;
 }
 
-.floating_button {
+.image {
+  border-radius: 4px;
+  background-color: #fbfbfd;
+  border: 1px solid #f5f5f7;
+}
+
+.floating_wrap {
   position: fixed;
   bottom: 24px;
   right: 24px;
+  border-radius: 99px;
+  overflow: hidden;
+  background-color: #fbfbfd;
+  border: 1px solid #f5f5f7;
+}
+
+.floating_button {
   width: 60px;
   height: 60px;
   background-color: #1976d2;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 60px;
   cursor: pointer;
   transition: 0.1s all ease-in-out;
   box-shadow: rgb(0 0 0 / 20%) 0px 3px 5px -1px,
@@ -71,6 +83,51 @@
 
 .floating_button:hover {
   background-color: #1560c0;
+}
+
+.floating_button:disabled {
+  background-color: #c0c0cc;
+}
+
+.color_plus_button_wrap {
+  position: relative;
+}
+
+.plus_color_wrap {
+  display: flex;
+  align-items: center;
+}
+
+.plus_color_wrap > button {
+  margin-right: 12px;
+}
+
+.plus_color {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}
+
+.main_color_wrap {
+  width: 200px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.main_color {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 60px;
+  height: 60px;
+  border-radius: 99px;
+}
+
+.main_color_button_wrap {
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
 }
 
 .cancel_button {
@@ -169,31 +226,6 @@
   margin-bottom: 0;
 }
 
-.picker_bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(2px);
-  z-index: 999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.picker_wrap {
-  background-color: #ffffff;
-  border-radius: 10px;
-}
-
-.picker_button_wrap {
-  padding: 0 12px 12px;
-  display: flex;
-  justify-content: space-between;
-}
-
 .toggle {
   position: relative;
   width: 44px;
@@ -241,4 +273,11 @@
 
 .toggle_wrap > span {
   margin-right: 8px;
+}
+
+.color_input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
 }

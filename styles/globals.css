@@ -21,3 +21,7 @@ button {
   all: unset;
   user-select: none;
 }
+
+.magnifier-image {
+  cursor: crosshair !important;
+}

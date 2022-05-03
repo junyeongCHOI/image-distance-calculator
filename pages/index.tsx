@@ -1,36 +1,30 @@
 import type { NextPage } from "next";
 import type { ChangeEvent } from "react";
 import { useEffect, useRef, useState } from "react";
-import { ColorPicker, useColor } from "react-color-palette";
 import { Colour } from "../libs/Colour";
-import { Dropper } from "../libs/Dropper";
 import styles from "../styles/index.module.css";
 
 const Index: NextPage = () => {
   const [colors, setColors] = useState<string[]>([]);
   const [dropperColor, setDropperColor] = useState<string | null>(null);
-  const [isColorPickerOpen, setColorPickerOpen] = useState<boolean>(false);
-  const [pickerColor, setPickerColor] = useColor("hex", "#000000");
   const [image, setImage] = useState<string | null>(null);
   const [orderBy, setOrderBy] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [formattedColors, setFormattedColors] = useState<
     { hex: string; rgba: number[]; dE00: number | null }[]
   >([]);
+  const colorInputRef = useRef<HTMLInputElement | null>(null);
+  const colorPlusInputRef = useRef<HTMLInputElement | null>(null);
+  const [mainColor, setMainColor] = useState<string | null>(null);
+  const [plusColor, setPlusColor] = useState<string | null>(null);
 
-  const dropperHandler = async () => {
+  const dropperHandler = async (e: any) => {
     if (!image) {
       alert("이미지를 추가해 주세요.");
       return;
     }
 
-    const color = await Dropper.getColor();
-
-    if (!color) {
-      return;
-    }
-
-    setDropperColor(color);
+    colorInputRef.current?.click();
   };
 
   const fileHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -79,15 +73,17 @@ const Index: NextPage = () => {
   }, [colors, dropperColor]);
 
   useEffect(() => {
-    const escHandler = (e: any) => {
-      if (e.key === "Escape") {
-        setColorPickerOpen(false);
-      }
-    };
+    if (colorInputRef.current) {
+      colorInputRef.current.onchange = (e: any) => {
+        setMainColor(e.target.value as string);
+      };
+    }
 
-    document.addEventListener("keyup", escHandler);
-
-    return () => document.removeEventListener("keyup", escHandler);
+    if (colorPlusInputRef.current) {
+      colorPlusInputRef.current.onchange = (e: any) => {
+        setPlusColor(e.target.value as string);
+      };
+    }
   }, []);
 
   return (
@@ -109,7 +105,12 @@ const Index: NextPage = () => {
       />
 
       {image ? (
-        <img width="100%" src={image} alt="uploaded image" />
+        <img
+          width="100%"
+          src={image}
+          alt="uploaded image"
+          className={styles.image}
+        />
       ) : (
         <div
           className={styles.no_image}
@@ -129,12 +130,45 @@ const Index: NextPage = () => {
             className={`${styles.toggle} ${orderBy ? styles.checked : ""}`}
           />
         </div>
-        <button
-          className={styles.button}
-          onClick={() => setColorPickerOpen(true)}
-        >
-          + 비교 색 추가
-        </button>
+        <div className={styles.color_plus_button_wrap}>
+          {plusColor ? (
+            <div className={styles.plus_color_wrap}>
+              <button
+                className={`${styles.button} ${styles.red}`}
+                onClick={() => setPlusColor(null)}
+              >
+                취소
+              </button>
+              <button
+                className={styles.button}
+                onClick={() => {
+                  setColors((prev) => [...prev, plusColor]);
+                  setPlusColor(null);
+                }}
+              >
+                추가
+              </button>
+              <div
+                className={styles.plus_color}
+                style={{ backgroundColor: plusColor }}
+              />
+            </div>
+          ) : (
+            <button
+              className={styles.button}
+              onClick={() => colorPlusInputRef.current?.click()}
+            >
+              + 비교 색 추가
+            </button>
+          )}
+          <input
+            type="color"
+            style={{ top: -12, right: 0 }}
+            className={styles.color_input}
+            ref={colorPlusInputRef}
+            id="colorInput"
+          />
+        </div>
       </div>
 
       {dropperColor && (
@@ -163,6 +197,7 @@ const Index: NextPage = () => {
           </button>
         </div>
       )}
+
       {[...formattedColors]
         .sort((_a, _b) => {
           if (!orderBy) {
@@ -218,49 +253,44 @@ const Index: NextPage = () => {
           </div>
         ))}
 
-      <button className={styles.floating_button} onClick={dropperHandler}>
-        <img src="/eyedropper-24.png" alt="eye dropper" />
-      </button>
-
-      {isColorPickerOpen && (
-        <div
-          className={styles.picker_bg}
-          onClick={(e) => {
-            e.stopPropagation();
-            setColorPickerOpen(false);
-          }}
-        >
-          <div
-            className={styles.picker_wrap}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <ColorPicker
-              width={300}
-              height={240}
-              color={pickerColor}
-              onChange={setPickerColor}
-              hideHSV
-            />
-            <div className={styles.picker_button_wrap}>
+      <div className={styles.floating_wrap}>
+        {mainColor ? (
+          <div className={styles.main_color_wrap}>
+            <div className={styles.main_color_button_wrap}>
               <button
                 className={`${styles.button} ${styles.red}`}
-                onClick={() => setColorPickerOpen(false)}
+                onClick={() => setMainColor(null)}
               >
                 취소
               </button>
               <button
                 className={styles.button}
                 onClick={() => {
-                  setColors((prev) => [...prev, pickerColor.hex]);
-                  setColorPickerOpen(false);
+                  setDropperColor(mainColor);
+                  setMainColor(null);
                 }}
               >
-                추가
+                확인
               </button>
             </div>
+            <div
+              className={styles.main_color}
+              style={{ backgroundColor: mainColor }}
+            />
           </div>
-        </div>
-      )}
+        ) : (
+          <button className={styles.floating_button} onClick={dropperHandler}>
+            <img src="/eyedropper.svg" alt="eye dropper" width={30} />
+          </button>
+        )}
+        <input
+          type="color"
+          style={{ top: -16, right: 0 }}
+          className={styles.color_input}
+          ref={colorInputRef}
+          id="colorInput"
+        />
+      </div>
     </div>
   );
 };
